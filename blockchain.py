@@ -3,7 +3,7 @@ import time
 import hashlib
 
 
-# ---- třída Block ----
+# ---- class Block ----
 class Block:
     def __init__(self, data, previous_hash):
         self.transactions = data
@@ -23,14 +23,13 @@ class Block:
             newHash = self.calculate_hash()
         self.hash = newHash
 
-    def __str__(self):  # formátování do JSON
+    def __str__(self):  # formate to JSON
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
+# ---- end of class Block ----
 
-# ---- konec třídy Block ----
 
-
-# ---- třída Wallet ----
+# ---- class Wallet ----
 class Wallet:
     def __init__(self, name):
         self.name = name
@@ -52,10 +51,10 @@ class Wallet:
 
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-# ---- konec třídy Wallet ----   
+# ---- end of class Wallet ----   
 
 
-# ---- třída Transaction ----
+# ---- class Transaction ----
 class Transaction:
     def __init__(self, sender, recipient, value, inputs):
         self.sender = sender
@@ -69,7 +68,7 @@ class Transaction:
         text = str(self.sender)+str(self.recipient)+str(self.value)
         return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-    def __str__(self):  # formátování do JSON
+    def __str__(self):  # formate to JSON
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
     def process_transaction(self):
@@ -77,15 +76,15 @@ class Transaction:
         for input in self.inputs:
             coinsInInputs += input.UTXO
         if coinsInInputs < self.value:
-            raise ValueError("Nedostatek mincí pro provedení transakce!")
+            raise ValueError("There is not enough coins in wallet!")
         cashback = coinsInInputs - self.value
         outputs = [TransactionOutput(self.sender, cashback, self.id), TransactionOutput(self.recipient, self.value, self.id)]
         return outputs
 
-# ---- konec třídy Transaction ----
+# ---- end of class Transaction ----
 
 
-# ---- třída TransactionInput ----
+# ---- class TransactionInput ----
 class TransactionInput:
     def __init__(self,transactionOutput):
         self.UTXO = transactionOutput.value
@@ -95,10 +94,10 @@ class TransactionInput:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 
-# ---- konec třídy TransactionInput ----   
+# ---- end of class TransactionInput ----   
 
 
-# ---- třída TransactionOutput ----
+# ---- class TransactionOutput ----
 class TransactionOutput:
     def __init__(self, recipient, value, parent_transaction_id):
         self.recipient = recipient
@@ -113,10 +112,10 @@ class TransactionOutput:
         text = str(self.recipient)+str(self.value)+str(self.parentTransactionId)
         return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-# ---- konec třídy TransactionOutput ----   
+# ---- end of class TransactionOutput ----   
 
 
-# ---- hlavní program main ----
+# ---- main program main ----
 
 def is_chain_valid(blockchain):
     prev_hash = "0"
@@ -151,7 +150,7 @@ print(walletB)
 def print_blockchain(blockchain):
     print("\nBlockchain:")
     for block in blockchain:
-        # v cyklu vypíše do konzole obsah každého bloku
+        # every block is written in console
         print(block)
 
 
